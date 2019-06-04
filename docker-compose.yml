@@ -7,7 +7,7 @@ services:
       dockerfile: docker/Dockerfile
     environment:
       - NODE_ENV=development
-      - DB_HOST=mongodb://auth-db:27017/
+      - DB_HOST=mongodb://auth-db:27017
       - DB_NAME=auth
       - PORT=80
     ports:
