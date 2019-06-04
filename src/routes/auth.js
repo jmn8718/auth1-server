@@ -31,7 +31,9 @@ router.post('/register', async function(req, res, next) {
     req.flash('error-register', 'Username and password are required');
     return res.redirect('/register');
   }
-  const newUser = new User({ username, password });
+  const userId = `local-${profile.id}`;
+  const connection = 'local';
+  const newUser = new User({ username, password, userId, connection });
   try {
     await newUser.save();
     req.login(newUser, function(err) {

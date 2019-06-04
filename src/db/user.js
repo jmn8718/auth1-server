@@ -12,6 +12,19 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  userId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  connection: {
+    type: String,
+    required: true,
+  },
+  profile: {
+    type: Schema.Types.Mixed,
+    default: {},
+  },
 });
 
 UserSchema.pre('save', async function() {

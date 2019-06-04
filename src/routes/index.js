@@ -1,6 +1,7 @@
 const { logger } = require('../logger');
 const usersRouter = require('./users');
 const auhtRouter = require('./auth');
+const socialRouter = require('./social');
 
 function ensureAuthenticated(req, res, next) {
   if (!req.isAuthenticated()) {
@@ -21,6 +22,7 @@ function applyRoutes(app) {
   });
 
   app.use('/', auhtRouter);
+  app.use('/social', socialRouter);
 
   app.use('/users', ensureAuthenticated, usersRouter);
 
