@@ -7,7 +7,7 @@ let db;
 function initDb() {
   const DB_URL = `${DB_HOST}/${DB_NAME}`;
   logger.debug(`Connecting to db on ${DB_URL}`);
-  mongoose.connect(DB_URL, { useNewUrlParser: true, useFindAndModify: true });
+  mongoose.connect(DB_URL, { useNewUrlParser: true, useFindAndModify: false });
 
   return new Promise(function(resolve, reject) {
     db = mongoose.connection;

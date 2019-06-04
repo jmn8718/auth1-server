@@ -49,7 +49,14 @@ const schema = {
     type: 'string',
     default: 'client_secret',
   },
+  GOOGLE_CLIENT_ID: {
+    type: 'string',
+    default: 'client_id',
+  },
+  GOOGLE_CLIENT_SECRET: {
+    type: 'string',
+    default: 'client_secret',
+  },
 };
 
-console.log(xenv({ schema }, env));
 module.exports = xenv({ schema }, env);

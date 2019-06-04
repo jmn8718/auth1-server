@@ -16,4 +16,22 @@ router.get(
   }
 );
 
+router.get(
+  '/google',
+  passport.authenticate('google', {
+    scope: ['https://www.googleapis.com/auth/plus.login'],
+  })
+);
+router.get(
+  '/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: '/login',
+    failureFlash: true,
+  }),
+  function(req, res) {
+    logger.debug('Successfully logged with github');
+    res.redirect('/users');
+  }
+);
+
 module.exports = router;

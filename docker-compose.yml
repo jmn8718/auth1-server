@@ -14,6 +14,8 @@ services:
       - PORT=80
       - GITHUB_CLIENT_ID=xx
       - GITHUB_CLIENT_SECRET=yy
+      - GOOGLE_CLIENT_ID=zz
+      - GOOGLE_CLIENT_SECRET=vv
     ports:
       - 8080:80
     volumes:
