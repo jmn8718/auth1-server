@@ -1,0 +1,18 @@
+extends layout
+
+block content
+	div.col-sm-9.col-md-7.col-lg-5.mx-auto
+		div.card.card-signin.my-5
+			div.card-body
+				h5.card-title.text-center #{title}
+				form.form-signin(action= action method='post')
+					div.form-label-group
+						input.form-control#inputEmail(name='username' type='email' autofocus required)
+						label(for='inputEmail') Email
+					div.form-label-group
+						input.form-control#inputPassword(type='password' name='password' required)
+						label(for='inputPassword') Password
+					button.btn.btn-lg.btn-primary.btn-block.text-uppercase(type='submit') #{buttonLabel}
+				if error
+					hr
+					div.alert.alert-danger #{error}

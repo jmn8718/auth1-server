@@ -29,6 +29,10 @@ const schema = {
     type: 'string',
     default: 's3cr3t',
   },
+  COOKIE_SECRET: {
+    type: 'string',
+    default: 'c00k13',
+  },
 };
 
 module.exports = xenv({ schema }, env);
