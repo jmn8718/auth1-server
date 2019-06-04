@@ -12,6 +12,14 @@ function ensureAuthenticated(req, res, next) {
 function applyRoutes(app) {
   logger.debug('Applying routes');
 
+  app.get('/', function(req, res, next) {
+    const pageOptions = {
+      title: 'AUTH1-SERVER',
+      isAuthenticated: req.isAuthenticated(),
+    };
+    res.render('index', pageOptions);
+  });
+
   app.use('/', auhtRouter);
 
   app.use('/users', ensureAuthenticated, usersRouter);

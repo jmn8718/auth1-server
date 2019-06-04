@@ -3,11 +3,15 @@ const { ensureLoggedIn } = require('connect-ensure-login');
 const router = express.Router();
 
 router.get('/', ensureLoggedIn('/login'), function(req, res, next) {
-  res.json(req.params);
-});
+  const pageOptions = {
+    title: 'Users',
+    isAuthenticated: true,
+    userString: JSON.stringify(req.user),
+    user: req.user,
+    sessionString: JSON.stringify(req.session),
+  };
 
-router.get('/:username', ensureLoggedIn('/login'), function(req, res, next) {
-  res.json(req.params);
+  res.render('users', pageOptions);
 });
 
 module.exports = router;

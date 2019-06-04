@@ -1,0 +1,12 @@
+extends pageLayout
+
+block content
+  h1= title
+  div
+    .card
+      .card-body
+        h5.card-title #{user.username}
+        p.card-text #{user}
+      ul.list-group.list-group-flush
+        li.list-group-item #{userString}
+        li.list-group-item #{sessionString}

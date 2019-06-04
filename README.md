@@ -37,3 +37,7 @@ docker-compose up
 ```
 
 The server will listen on the port 8080
+
+## libraries
+
+- [passport](http://www.passportjs.org/docs/configure/)
