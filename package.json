@@ -14,7 +14,8 @@
     "http-errors": "~1.6.3",
     "lodash": "^4.17.11",
     "morgan": "~1.9.1",
-    "pug": "2.0.0-beta11",
+    "pug": "^2.0.3",
+    "winston": "^3.2.1",
     "xenv": "^4.4.1"
   },
   "devDependencies": {
