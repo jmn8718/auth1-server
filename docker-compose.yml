@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  auth-server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mongodb://auth-db:27017/
+      - DB_NAME=auth
+      - PORT=80
+    ports:
+      - 8080:80
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - auth-db
+    restart: always
+    networks:
+      - auth-network
+    entrypoint:
+      - npm
+      - run
+      - start:dev
+  auth-db:
+    image: mongo:4.0.0-xenial
+    ports:
+      - 27018:27017
+    environment:
+      MONGO_INITDB_DATABASE: auth
+    restart: always
+    networks:
+      - auth-network
+
+networks:
+  auth-network:
