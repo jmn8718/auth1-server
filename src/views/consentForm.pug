@@ -1,0 +1,13 @@
+extends pageLayout
+
+block content
+	div.col-sm-9.col-md-7.col-lg-5.mx-auto
+		div.card.card-signin.my-5
+			div.card-body
+				h5.card-title.text-center #{client.name}
+				form.form-signin(action= action method='post')
+					input.btn.btn-lg.btn-primary.btn-block.text-uppercase(type='submit' value='Allow')
+					input.btn.btn-lg.btn-primary.btn-block.text-uppercase(type='submit' value='Deny' name="cancel")
+				if error
+					hr
+					div.alert.alert-danger #{error}

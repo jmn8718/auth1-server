@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { DB_HOST, DB_NAME } = require('../env');
 const { logger } = require('../logger');
-
+const { generateSeeds } = require('./seeds');
 let db;
 
 function initDb() {
@@ -19,6 +19,7 @@ function initDb() {
     });
     db.once('open', function() {
       logger.debug('Connected to db');
+      generateSeeds();
       resolve();
     });
   });
