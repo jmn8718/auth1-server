@@ -1,14 +1,10 @@
 const { logger } = require('../logger');
 const usersRouter = require('./users');
-const auhtRouter = require('./auth');
 const socialRouter = require('./social');
-
-function ensureAuthenticated(req, res, next) {
-  if (!req.isAuthenticated()) {
-    return res.redirect('/login');
-  }
-  next();
-}
+const registerRouter = require('./register');
+const loginRouter = require('./login');
+const logoutRouter = require('./logout');
+const { ensureAuthenticated } = require('./middleware');
 
 function applyRoutes(app) {
   logger.debug('Applying routes');
@@ -21,7 +17,9 @@ function applyRoutes(app) {
     res.render('index', pageOptions);
   });
 
-  app.use('/', auhtRouter);
+  app.use('/register', registerRouter);
+  app.use('/login', loginRouter);
+  app.use('/logout', logoutRouter);
   app.use('/social', socialRouter);
 
   app.use('/users', ensureAuthenticated, usersRouter);
