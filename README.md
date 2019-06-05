@@ -19,7 +19,7 @@ The goal is to get to know Node.js, MongoDB, Passport.js and OAuth2orize
 ### optional
 
 - [X] If the user has a valid session, skip the login page
-- [ ] If the user has previously granted consent, skip the consent dialog
+- [X] If the user has previously granted consent, skip the consent dialog
 - [ ] Support some of the OIDC request extension parameters using oauth2orize-openid
 - [X] Use MongoDB for all the data that needs to be persisted
 

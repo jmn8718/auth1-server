@@ -3,6 +3,7 @@ const router = express.Router();
 const { ensureLoggedIn } = require('connect-ensure-login');
 const { server } = require('../auth/server');
 const { Client } = require('../db/client');
+const { Grant } = require('../db/grant');
 const { logger } = require('../logger');
 
 router.get(
@@ -25,16 +26,32 @@ router.get(
     });
   }),
   function(req, res) {
-    const { transactionID, client } = req.oauth2;
-    res.render('consentForm', {
-      action: `/dialog/authorize/decision?transaction_id=${transactionID}`,
-      client,
-      title: 'Consent',
-      buttonLabel: 'Accept',
+    const { transactionID, client, user } = req.oauth2;
+    logger.debug(
+      'consent +=> ' +
+        JSON.stringify({ userId: user.userId, clientId: client.clientId })
+    );
+    Grant.findOne({ userId: user.userId, clientId: client.clientId }, function(
+      err,
+      grant
+    ) {
+      logger.error(err);
+      logger.debug(grant);
+      const decisionUrl = `/dialog/authorize/decision?transaction_id=${transactionID}`;
+      if (grant) {
+        return res.redirect(decisionUrl);
+      }
+      res.render('consentForm', {
+        action: decisionUrl,
+        client,
+        title: 'Consent',
+        buttonLabel: 'Accept',
+      });
     });
   }
 );
 
+router.get('/authorize/decision', ensureLoggedIn('/login'), server.decision());
 router.post('/authorize/decision', ensureLoggedIn('/login'), server.decision());
 
 module.exports = router;
