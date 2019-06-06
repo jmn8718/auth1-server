@@ -29,7 +29,7 @@ server.grant(
 
 server.exchange(
   exchange.code(function(client, code, redirectUri, done) {
-    AuthorizationCode.findOne(code, function(err, authorizationCode) {
+    AuthorizationCode.findOne({ code }, function(err, authorizationCode) {
       if (err) {
         logger.error(err);
         return done(err);
@@ -44,12 +44,12 @@ server.exchange(
       }
 
       const token = uid(256);
-      const accessToken = new AccessToken(
+      const accessToken = new AccessToken({
         token,
-        authorizationCode.userId,
-        authorizationCode.clientId,
-        authorizationCode.scope
-      );
+        userId: authorizationCode.userId,
+        clientId: authorizationCode.clientId,
+        scope: authorizationCode.scope,
+      });
       accessToken.save(function(err) {
         if (err) {
           return done(err);

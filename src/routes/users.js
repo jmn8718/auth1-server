@@ -15,13 +15,23 @@ router.get('/', ensureLoggedIn('/login'), function(req, res, next) {
 });
 
 router.get('/consent', ensureLoggedIn('/login'), function(req, res, next) {
+  const { code } = req.query;
+  if (code) {
   const pageOptions = {
     title: 'Users',
     isAuthenticated: true,
     user: req.user,
+      code,
+      clientId: 'id2019',
+      clientSecret: 'secret2019',
+      redirectUri: 'http://localhost:8080/users/consent',
+      grantType: 'authorization_code',
   };
 
-  res.render('users', pageOptions);
+    res.render('exchange', pageOptions);
+  } else {
+    res.redirect('/users');
+  }
 });
 
 module.exports = router;

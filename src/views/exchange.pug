@@ -1,0 +1,16 @@
+extends pageLayout
+
+block content
+	div.col-sm-9.col-md-7.col-lg-5.mx-auto
+		div.card.card-signin.my-5
+			div.card-body
+				form.form-signin(action='/token' method='post')
+					input.form-control.d-none#clientId(name='client_id' value= clientId)
+					input.form-control.d-none#clientSecret(name='client_secret' value= clientSecret)
+					input.form-control.d-none#redirectUri(name='redirect_uri' value= redirectUri)
+					input.form-control.d-none#code(name='code' value= code)
+					input.form-control.d-none#grantType(name='grant_type' value= grantType)
+					button.btn.btn-lg.btn-primary.btn-block.text-uppercase(type='submit') Exchange
+				if error
+					hr
+					div.alert.alert-danger #{error}
