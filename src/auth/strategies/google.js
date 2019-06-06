@@ -26,7 +26,7 @@ function registerStrategy(passport) {
         const userId = `google-${profile.id}`;
         const userData = {
           userId,
-          connection: 'github',
+          connection: 'google',
           username: userId,
           password: '',
           profile: assign(

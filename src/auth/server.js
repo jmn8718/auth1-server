@@ -3,7 +3,6 @@ const uid = require('node-uid');
 const { AuthorizationCode } = require('../db/authorizationCode');
 const { AccessToken } = require('../db/accessToken');
 const { Client } = require('../db/client');
-const { Grant } = require('../db/grant');
 const { logger } = require('../logger');
 const server = createServer();
 
@@ -18,16 +17,6 @@ server.grant(
       scope: ares.scope,
     });
 
-    const grantData = { userId: user.userId, clientId: client.clientId };
-    Grant.findOneAndUpdate(
-      grantData,
-      grantData,
-      { upsert: true, new: true },
-      function(err, grant) {
-        if (err) {
-          return done(err);
-        }
-        logger.debug('grant saved => ' + JSON.stringify(grant));
     authorizationCode.save(function(err) {
       if (err) {
         return done(err);
@@ -35,8 +24,6 @@ server.grant(
       logger.debug(`AC (${code}) => ${JSON.stringify(authorizationCode)}`);
       return done(null, code);
     });
-      }
-    );
   })
 );
 

@@ -14,7 +14,6 @@ const ClientSchema = new Schema({
   clientSecret: {
     type: String,
     required: true,
-    unique: true,
   },
   redirectUri: {
     type: String,

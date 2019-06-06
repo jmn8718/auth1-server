@@ -9,7 +9,6 @@ const GrantSchema = new Schema({
   clientId: {
     type: String,
     required: true,
-    unique: true,
   },
 });
 
