@@ -10,8 +10,9 @@ router.get(
   '/authorize',
   ensureLoggedIn('/login'),
   server.authorize(
-    function(clientId, redirectUri, done) {
+    function(clientId, redirectUri, scope, type, done) {
       logger.debug('authorize ---> ' + clientId + ' . ' + redirectUri);
+      logger.debug('scope ---> ' + scope + ' . ' + type);
       Client.findOne({ clientId }, function(err, client) {
         if (err) {
           return done(err);
@@ -43,9 +44,8 @@ router.get(
       'consent +=> ' +
         JSON.stringify({ userId: user.userId, clientId: client.clientId })
     );
-    const decisionUrl = `/dialog/authorize/decision?transaction_id=${transactionID}`;
     res.render('consentForm', {
-      action: decisionUrl,
+      action: `/dialog/authorize/decision?transaction_id=${transactionID}`,
       client,
       title: 'Consent',
       buttonLabel: 'Accept',

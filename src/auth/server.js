@@ -1,5 +1,6 @@
 const { createServer, exchange, grant } = require('oauth2orize');
 const uid = require('node-uid');
+const { get } = require('lodash');
 const { AuthorizationCode } = require('../db/authorizationCode');
 const { AccessToken } = require('../db/accessToken');
 const { Client } = require('../db/client');
@@ -7,14 +8,16 @@ const { logger } = require('../logger');
 const server = createServer();
 
 server.grant(
-  grant.code(function(client, redirectUri, user, ares, done) {
+  grant.code(function(client, redirectUri, user, ares, areq, done) {
     const code = uid(16);
+    const areqScope = get(areq, 'scope');
+    const scope = Array.isArray(areq.scope) ? areqScope.join(' ') : areqScope;
     const authorizationCode = new AuthorizationCode({
       code,
       clientId: client.clientId,
       redirectUri,
       userId: user.userId,
-      scope: ares.scope,
+      scope,
     });
 
     authorizationCode.save(function(err) {
