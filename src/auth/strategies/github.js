@@ -1,5 +1,5 @@
 const GitHubStrategy = require('passport-github').Strategy;
-const { pick } = require('lodash');
+const { pick, get, assign } = require('lodash');
 const { User } = require('../../db/user');
 const { logger } = require('../../logger');
 const {
@@ -10,6 +10,23 @@ const {
 } = require('../../env');
 
 const PROFILE_FIELDS = ['id', 'displayName', 'username', 'profileUrl'];
+const PROFILE_JSON_FIELDS = ['id', 'avatar_url', 'url', 'name'];
+const parseProfile = function(profile) {
+  const _json = get(profile, '_json', {});
+  const emails = get(profile, 'emails', []);
+  const email = emails.length > 0 ? emails[0].value : '';
+  const fields = pick(profile, PROFILE_FIELDS);
+  const userId = `github-${profile.id}`;
+  return assign({}, fields, {
+    userId,
+    email,
+    connection: 'github',
+    username: userId,
+    password: '',
+    _json: pick(_json, PROFILE_JSON_FIELDS),
+  });
+};
+
 function registerStrategy(passport) {
   logger.debug('Registering github strategy');
   const callbackURL = `${SERVER_HOST}:${SERVER_PORT}/social/github/callback`;
@@ -20,19 +37,12 @@ function registerStrategy(passport) {
         clientID: GITHUB_CLIENT_ID,
         clientSecret: GITHUB_CLIENT_SECRET,
         callbackURL,
+        scope: 'user,user:email',
       },
       function(accessToken, refreshToken, profile, cb) {
-        const userId = `github-${profile.id}`;
-        const userData = {
-          userId,
-          connection: 'github',
-          username: userId,
-          password: '',
-          profile: pick(profile, PROFILE_FIELDS),
-        };
-
+        const userData = parseProfile(profile);
         User.findOneAndUpdate(
-          { userId },
+          { userId: userData.userId },
           userData,
           { upsert: true, new: true },
           function(err, user) {
