@@ -30,10 +30,6 @@ function applyRoutes(app) {
 
   app.use('/dialog', ensureAuthenticated, authRouter);
   app.use('/users', ensureAuthenticated, usersRouter);
-
-  app.use('*', function(req, res, next) {
-    res.redirect('/login');
-  });
 }
 
 module.exports = {

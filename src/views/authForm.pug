@@ -19,3 +19,6 @@ block content
 				hr
 				a.btn.btn-outline-primary.text-uppercase.w-100.btn-social.mb-2(href='/social/github') sign in with github
 				a.btn.btn-outline-primary.text-uppercase.w-100.btn-social(href='/social/google') sign in with google
+				if redirectTo
+					hr
+					a.btn.btn-outline-dark.text-uppercase.w-100(href= redirectTo) #{redirectToMessage}

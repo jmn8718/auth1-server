@@ -9,6 +9,8 @@ router.get('/', checkLoggedIn, function(req, res, next) {
     title: 'LOGIN',
     buttonLabel: 'Sign in',
     action: '/login',
+    redirectTo: '/register',
+    redirectToMessage: 'Go to register',
   };
   const errorMessages = req.session.messages;
   if (errorMessages && errorMessages.length > 0) {

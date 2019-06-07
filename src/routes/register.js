@@ -10,6 +10,8 @@ router.get('/', checkLoggedIn, function(req, res, next) {
     title: 'REGISTER',
     buttonLabel: 'Sign up',
     action: '/register',
+    redirectTo: '/login',
+    redirectToMessage: 'Go to Login',
   };
   const errorMessages = req.flash('error-register');
   if (errorMessages.length > 0) {
