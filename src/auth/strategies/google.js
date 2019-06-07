@@ -15,18 +15,22 @@ const parseProfile = function(profile) {
   const userId = `google-${profile.id}`;
   const emails = get(profile, 'emails', []);
   const email = emails.length > 0 ? emails[0].value : '';
-  const profileFields = assign(
-    {},
-    pick(profile, PROFILE_FIELDS),
-    pick(profile._json, PROFILE_JSON_FIELDS)
-  );
-  return {
+  const user = {
     userId,
     connection: 'google',
     username: userId,
     password: '',
     email,
-    _json: profileFields,
+  };
+  const profileFields = assign(
+    {},
+    pick(profile, PROFILE_FIELDS),
+    pick(profile._json, PROFILE_JSON_FIELDS),
+    user
+  );
+  return {
+    ...user,
+    profile: profileFields,
   };
 };
 

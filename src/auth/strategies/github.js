@@ -17,13 +17,16 @@ const parseProfile = function(profile) {
   const email = emails.length > 0 ? emails[0].value : '';
   const fields = pick(profile, PROFILE_FIELDS);
   const userId = `github-${profile.id}`;
-  return assign({}, fields, {
+  const user = {
     userId,
     email,
     connection: 'github',
     username: userId,
     password: '',
-    _json: pick(_json, PROFILE_JSON_FIELDS),
+  };
+  return assign({}, fields, {
+    ...user,
+    profile: assign({}, pick(_json, PROFILE_JSON_FIELDS), user),
   });
 };
 

@@ -1,16 +1,22 @@
 const express = require('express');
+const qs = require('qs');
 const { ensureLoggedIn } = require('connect-ensure-login');
 const router = express.Router();
 
 router.get('/', ensureLoggedIn('/login'), function(req, res, next) {
+  const authorizeQs = {
+    response_type: 'code',
+    client_id: 'id2019',
+    scope: 'openid email',
+    redirect_uri: 'http://localhost:8080/users/consent',
+  };
   const pageOptions = {
     title: 'Users',
     isAuthenticated: true,
     userString: JSON.stringify(req.user),
     user: req.user,
     sessionString: JSON.stringify(req.session),
-    consentUrl:
-      '/dialog/authorize?response_type=code&client_id=id2019&scope=email%20op&redirect_uri=http://localhost:8080/users/consent',
+    consentUrl: `/dialog/authorize?${qs.stringify(authorizeQs)}`,
   };
 
   res.render('users', pageOptions);

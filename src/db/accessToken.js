@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const { validateScopes } = require('../auth/utils');
 
 const AccessTokenSchema = new Schema({
   token: {
@@ -23,6 +24,12 @@ const AccessTokenSchema = new Schema({
 });
 
 const AccessToken = mongoose.model('AccessToken', AccessTokenSchema);
+
+AccessTokenSchema.pre('save', function() {
+  const { scope } = this;
+
+  this.scope = validateScopes(scope);
+});
 
 module.exports = {
   AccessTokenSchema,

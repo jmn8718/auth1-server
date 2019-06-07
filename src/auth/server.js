@@ -10,6 +10,12 @@ const server = createServer();
 server.grant(
   grant.code(function(client, redirectUri, user, ares, areq, done) {
     const code = uid(16);
+    logger.debug('CODE => ' + code);
+    logger.debug(client);
+    logger.debug(redirectUri);
+    logger.debug(user);
+    logger.debug(JSON.stringify(ares));
+    logger.debug(JSON.stringify(areq));
     const areqScope = get(areq, 'scope');
     const scope = Array.isArray(areq.scope) ? areqScope.join(' ') : areqScope;
     const authorizationCode = new AuthorizationCode({
@@ -39,10 +45,11 @@ server.exchange(
       }
       logger.debug('AZCODE' + JSON.stringify(authorizationCode));
       logger.debug('AZCODE CLIENT' + JSON.stringify(client));
-      if (client.clientId !== authorizationCode.clientId) {
+      if (!authorizationCode) {
         return done(null, false);
-      }
-      if (redirectUri !== authorizationCode.redirectUri) {
+      } else if (client.clientId !== authorizationCode.clientId) {
+        return done(null, false);
+      } else if (redirectUri !== authorizationCode.redirectUri) {
         return done(null, false);
       }
 

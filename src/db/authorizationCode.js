@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const { validateScopes } = require('../auth/utils');
 
 const AuthorizationCodeSchema = new Schema({
   code: {
@@ -26,22 +27,10 @@ const AuthorizationCodeSchema = new Schema({
   },
 });
 
-// https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims
-const VALID_SCOPES = {
-  profile: 'profile',
-  email: 'email',
-  address: 'address',
-  phone: 'phone',
-};
-
 AuthorizationCodeSchema.pre('save', async function() {
   const { scope } = this;
-  this.scope = scope
-    .split(' ')
-    .filter(function(currentScope) {
-      return !!VALID_SCOPES[currentScope];
-    })
-    .join(' ');
+
+  this.scope = validateScopes(scope);
 });
 
 const AuthorizationCode = mongoose.model(
