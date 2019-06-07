@@ -24,4 +24,5 @@ The server will listen on the port 8080
 - [passport-github](https://github.com/jaredhanson/passport-github)
 - [passport-google-oauth](https://github.com/jaredhanson/passport-google-oauth)
 - [passport-http-bearer](https://github.com/jaredhanson/passport-http-bearer)
+- [passport-http](https://github.com/jaredhanson/passport-http)
 - [oauth2orize](https://github.com/jaredhanson/oauth2orize)

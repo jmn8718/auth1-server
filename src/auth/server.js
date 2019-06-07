@@ -43,13 +43,25 @@ server.exchange(
         logger.error(err);
         return done(err);
       }
+
       logger.debug('AZCODE' + JSON.stringify(authorizationCode));
-      logger.debug('AZCODE CLIENT' + JSON.stringify(client));
       if (!authorizationCode) {
         return done(null, false);
-      } else if (client.clientId !== authorizationCode.clientId) {
+      }
+      logger.debug('AZCODE CLIENT ' + JSON.stringify(client));
+      logger.debug('AZCODE redirectUri ' + redirectUri);
+      if (redirectUri !== authorizationCode.redirectUri) {
         return done(null, false);
-      } else if (redirectUri !== authorizationCode.redirectUri) {
+      } else if (
+        client.clientId &&
+        client.clientId !== authorizationCode.clientId
+      ) {
+        // support client secret
+        return done(null, false);
+      } else if (client.userId && client.userId !== authorizationCode.userId) {
+        // suport basic authentication
+        return done(null, false);
+      } else if (!client.clientId && !client.userId) {
         return done(null, false);
       }
 

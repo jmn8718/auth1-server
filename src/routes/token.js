@@ -5,7 +5,7 @@ const { server } = require('../auth/server');
 
 router.post(
   '/',
-  passport.authenticate(['oauth2-client-password'], {
+  passport.authenticate(['basic', 'oauth2-client-password'], {
     session: false,
   }),
   server.token(),
