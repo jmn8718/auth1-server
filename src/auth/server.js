@@ -5,6 +5,7 @@ const { AuthorizationCode } = require('../db/authorizationCode');
 const { AccessToken } = require('../db/accessToken');
 const { Client } = require('../db/client');
 const { logger } = require('../logger');
+const { generateClaimsAndSign } = require('./token');
 const server = createServer();
 
 server.grant(
@@ -65,7 +66,10 @@ server.exchange(
         return done(null, false);
       }
 
-      const token = uid(256);
+      const token = generateClaimsAndSign({
+        user_id: authorizationCode.userId,
+      });
+
       const accessToken = new AccessToken({
         token,
         userId: authorizationCode.userId,

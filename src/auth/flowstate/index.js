@@ -1,8 +1,7 @@
 const flowstate = require('flowstate');
-const jwt = require('jsonwebtoken');
-const moment = require('moment');
+const qs = require('querystring');
 const { get } = require('lodash');
-const { JWT_SIGNING_KEY, JWT_EXPIRATION_SECONDS } = require('../../env');
+const { generateClaimsAndSign } = require('../token');
 const { logger } = require('../../logger');
 
 const Manager = flowstate.Manager;
@@ -31,19 +30,10 @@ manager.use(
     function(req, res, next) {
       const user = get(req, 'locals.user', {});
       const state = get(req, 'state', {});
-      const now = moment();
 
-      const claims = {
-        iss: 'http://localhost:8080',
-        sub: user.userId,
-        iat: now.unix(),
-        exp: now.add(JWT_EXPIRATION_SECONDS, 'seconds').unix(),
-      };
-
-      const token = jwt.sign(claims, JWT_SIGNING_KEY);
-      res.redirect(
-        `${state.redirect_uri}/#access_token=${token}&state=${req.state.state}`
-      );
+      const token = generateClaimsAndSign({ user_id: user.userId });
+      const query = qs.stringify({ access_token: token, state: state.state });
+      res.redirect(`${state.redirect_uri}/#${query}`);
     },
   ]
 );
