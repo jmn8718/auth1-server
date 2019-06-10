@@ -1,6 +1,6 @@
 const express = require('express');
 const { passport } = require('../auth');
-const { get } = require('lodash');
+const { findKey, get } = require('lodash');
 const { logger } = require('../logger');
 const router = express.Router();
 const { store, manager } = require('../auth/flowstate');
@@ -36,10 +36,27 @@ router.get('/', checkLoggedIn, function(req, res, next) {
 router.post(
   '/',
   passport.authenticate('local', {
-    successReturnToOrRedirect: '/users',
     failureRedirect: '/login',
     failureMessage: true,
-  })
+  }),
+  function(req, res, next) {
+    logger.debug('Successfully logged with username/password');
+    next();
+  },
+  function redirect(req, res, next) {
+    const sessionState = get(req, 'session.state', {});
+    console.log(sessionState);
+    const state = findKey(sessionState, function({ name }) {
+      return name === 'login';
+    });
+
+    // login from authorize flow
+    if (state) {
+      res.redirect(`/login/callback?state=${state}`);
+    } else {
+      res.redirect('/users');
+    }
+  }
 );
 
 router.get(
