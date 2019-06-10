@@ -6,7 +6,6 @@ const {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
   SERVER_HOST,
-  SERVER_PORT,
 } = require('../../env');
 
 const PROFILE_FIELDS = ['id', 'displayName', 'username', 'profileUrl'];
@@ -32,7 +31,7 @@ const parseProfile = function(profile) {
 
 function registerStrategy(passport) {
   logger.debug('Registering github strategy');
-  const callbackURL = `${SERVER_HOST}:${SERVER_PORT}/social/github/callback`;
+  const callbackURL = `${SERVER_HOST}/social/github/callback`;
   logger.debug('github callbackURL: ' + callbackURL);
   passport.use(
     new GitHubStrategy(

@@ -17,6 +17,7 @@ router.get('/', checkLoggedIn, function(req, res, next) {
   const errorMessages = req.session.messages;
   if (errorMessages && errorMessages.length > 0) {
     pageOptions.error = errorMessages.join(', ');
+    req.session.messages = [];
   }
 
   if (get(req, 'query.state') && get(req, 'session.state')) {

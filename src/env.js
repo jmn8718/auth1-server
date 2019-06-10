@@ -6,11 +6,7 @@ const env = extend({}, process.env);
 const schema = {
   SERVER_HOST: {
     type: 'string',
-    default: 'http://localhost',
-  },
-  SERVER_PORT: {
-    type: 'int',
-    default: 8080,
+    default: 'http://localhost:8080',
   },
   PORT: {
     type: 'int',
