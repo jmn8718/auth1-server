@@ -19,6 +19,10 @@ const ClientSchema = new Schema({
     type: String,
     required: true,
   },
+  userId: {
+    type: String,
+    default: '',
+  },
 });
 
 const Client = mongoose.model('Client', ClientSchema);
