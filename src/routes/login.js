@@ -1,7 +1,9 @@
 const express = require('express');
 const { passport } = require('../auth');
+const { get } = require('lodash');
+const { logger } = require('../logger');
 const router = express.Router();
-
+const { store, manager } = require('../auth/flowstate');
 const { checkLoggedIn } = require('./middleware');
 
 router.get('/', checkLoggedIn, function(req, res, next) {
@@ -16,7 +18,19 @@ router.get('/', checkLoggedIn, function(req, res, next) {
   if (errorMessages && errorMessages.length > 0) {
     pageOptions.error = errorMessages.join(', ');
   }
-  res.render('authForm', pageOptions);
+
+  if (get(req, 'query.state') && get(req, 'session.state')) {
+    const loginState = { name: 'login', prev: req.query.state };
+    logger.debug(
+      'Redirected to login from authorize => loginState: ' +
+        JSON.stringify(loginState)
+    );
+    store.save(req, loginState, null, function(err, handle) {
+      res.render('authForm', pageOptions);
+    });
+  } else {
+    res.render('authForm', pageOptions);
+  }
 });
 
 router.post(
@@ -26,6 +40,18 @@ router.post(
     failureRedirect: '/login',
     failureMessage: true,
   })
+);
+
+router.get(
+  '/callback',
+  manager.loadState('login'),
+  function(req, res, next) {
+    req.state = req.state || {};
+    req.locals = req.locals || {};
+    // req.locals.strategy = req.state.strategy;
+    next();
+  },
+  manager.complete('login')
 );
 
 module.exports = router;

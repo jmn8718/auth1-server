@@ -61,6 +61,14 @@ const schema = {
     type: 'string',
     default: 'client_secret',
   },
+  JWT_SIGNING_KEY: {
+    type: 'string',
+    default: 'jwt_signing_key',
+  },
+  JWT_EXPIRATION_SECONDS: {
+    type: 'int',
+    default: 3600,
+  },
 };
 
 module.exports = xenv({ schema }, env);

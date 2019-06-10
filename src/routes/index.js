@@ -7,6 +7,7 @@ const logoutRouter = require('./logout');
 const authRouter = require('./auth');
 const userinfoRouter = require('./userinfo');
 const tokenRouter = require('./token');
+const authorizeRouter = require('./authorize');
 const { ensureAuthenticated } = require('./middleware');
 
 function applyRoutes(app) {
@@ -25,6 +26,7 @@ function applyRoutes(app) {
   app.use('/logout', logoutRouter);
   app.use('/social', socialRouter);
   app.use('/token', tokenRouter);
+  app.use('/authorize', authorizeRouter);
 
   app.use('/userinfo', userinfoRouter);
 
