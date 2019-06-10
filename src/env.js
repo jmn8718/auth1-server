@@ -41,6 +41,10 @@ const schema = {
     type: 'string',
     default: 'c00k13',
   },
+  COOKIE_MAX_AGE: {
+    type: 'int',
+    default: 360000,
+  },
   GITHUB_CLIENT_ID: {
     type: 'string',
     default: 'client_id',

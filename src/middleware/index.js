@@ -3,17 +3,23 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const morgan = require('morgan');
-const createError = require('http-errors');
+// const createError = require('http-errors');
 const flash = require('connect-flash');
 const { passport } = require('../auth');
 const { logger } = require('../logger');
-const { SESSION_SECRET, COOKIE_SECRET, NODE_ENV } = require('../env');
+const {
+  SESSION_SECRET,
+  COOKIE_SECRET,
+  NODE_ENV,
+  COOKIE_MAX_AGE,
+} = require('../env');
+
 const sessionConfig = {
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
-    maxAge: 3600000,
+    maxAge: COOKIE_MAX_AGE,
   },
 };
 
@@ -41,8 +47,13 @@ module.exports = {
     logger.debug('Applying middleware after routes');
 
     // catch 404 and forward to error handler
+    // app.use(function(req, res, next) {
+    //   next(createError(404));
+    // });
+
+    // redirect to '/' on 404
     app.use(function(req, res, next) {
-      next(createError(404));
+      res.redirect('/');
     });
 
     // error handler
