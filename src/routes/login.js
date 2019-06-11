@@ -4,7 +4,10 @@ const { findKey, get } = require('lodash');
 const { logger } = require('../logger');
 const router = express.Router();
 const { store, manager } = require('../auth/flowstate');
-const { checkLoggedIn } = require('./middleware');
+const {
+  redirectCompleteWithFlowState,
+  checkLoggedIn,
+} = require('./middleware');
 
 router.get('/', checkLoggedIn, function(req, res, next) {
   const pageOptions = {
@@ -13,6 +16,8 @@ router.get('/', checkLoggedIn, function(req, res, next) {
     action: '/login',
     redirectTo: '/register',
     redirectToMessage: 'Go to register',
+    githubHref: '/social/github',
+    googleHref: '/social/google',
   };
   const errorMessages = req.session.messages;
   if (errorMessages && errorMessages.length > 0) {
@@ -27,6 +32,9 @@ router.get('/', checkLoggedIn, function(req, res, next) {
         JSON.stringify(loginState)
     );
     store.save(req, loginState, null, function(err, handle) {
+      pageOptions.action = pageOptions.action + '?state=' + handle;
+      pageOptions.githubHref = pageOptions.githubHref + '?state=' + handle;
+      pageOptions.googleHref = pageOptions.googleHref + '?state=' + handle;
       res.render('authForm', pageOptions);
     });
   } else {
@@ -36,6 +44,7 @@ router.get('/', checkLoggedIn, function(req, res, next) {
 
 router.post(
   '/',
+  manager.loadState('login'),
   passport.authenticate('local', {
     failureRedirect: '/login',
     failureMessage: true,
@@ -44,32 +53,7 @@ router.post(
     logger.debug('Successfully logged with username/password');
     next();
   },
-  function redirect(req, res, next) {
-    const sessionState = get(req, 'session.state', {});
-    console.log(sessionState);
-    const state = findKey(sessionState, function({ name }) {
-      return name === 'login';
-    });
-
-    // login from authorize flow
-    if (state) {
-      res.redirect(`/login/callback?state=${state}`);
-    } else {
-      res.redirect('/users');
-    }
-  }
-);
-
-router.get(
-  '/callback',
-  manager.loadState('login'),
-  function(req, res, next) {
-    req.state = req.state || {};
-    req.locals = req.locals || {};
-    // req.locals.strategy = req.state.strategy;
-    next();
-  },
-  manager.complete('login')
+  redirectCompleteWithFlowState
 );
 
 module.exports = router;

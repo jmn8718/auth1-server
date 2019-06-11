@@ -17,8 +17,10 @@ block content
 					hr
 					div.alert.alert-danger #{error}
 				hr
-				a.btn.btn-outline-primary.text-uppercase.w-100.btn-social.mb-2(href='/social/github') sign in with github
-				a.btn.btn-outline-primary.text-uppercase.w-100.btn-social(href='/social/google') sign in with google
+				if githubHref
+					a.btn.btn-outline-primary.text-uppercase.w-100.btn-social.mb-2(href= githubHref) sign in with github
+				if googleHref
+					a.btn.btn-outline-primary.text-uppercase.w-100.btn-social(href= googleHref) sign in with google
 				if redirectTo
 					hr
 					a.btn.btn-outline-dark.text-uppercase.w-100(href= redirectTo) #{redirectToMessage}

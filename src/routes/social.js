@@ -1,26 +1,22 @@
 const express = require('express');
-const { findKey, get } = require('lodash');
 const { passport } = require('../auth');
 const router = express.Router();
 const { logger } = require('../logger');
+const { manager } = require('../auth/flowstate');
+const {
+  redirectCompleteWithFlowState,
+  handlePassportWithState,
+} = require('./middleware');
 
-function redirect(req, res, next) {
-  const sessionState = get(req, 'session.state', {});
-  const state = findKey(sessionState, function({ name }) {
-    return name === 'login';
-  });
+router.get(
+  '/github',
+  manager.loadState('login'),
+  handlePassportWithState('github')
+);
 
-  // login from authorize flow
-  if (state) {
-    res.redirect(`/login/callback?state=${state}`);
-  } else {
-    res.redirect('/users');
-  }
-}
-
-router.get('/github', passport.authenticate('github'));
 router.get(
   '/github/callback',
+  manager.loadState('login'),
   passport.authenticate('github', {
     failureRedirect: '/login',
     failureFlash: true,
@@ -29,18 +25,20 @@ router.get(
     logger.debug('Successfully logged with github');
     next();
   },
-  redirect
+  redirectCompleteWithFlowState
 );
 
 router.get(
   '/google',
-  passport.authenticate('google', {
+  manager.loadState('login'),
+  handlePassportWithState('google', {
     scope: ['profile', 'email'],
   })
 );
 
 router.get(
   '/google/callback',
+  manager.loadState('login'),
   passport.authenticate('google', {
     failureRedirect: '/login',
     failureFlash: true,
@@ -49,7 +47,7 @@ router.get(
     logger.debug('Successfully logged with google');
     next();
   },
-  redirect
+  redirectCompleteWithFlowState
 );
 
 module.exports = router;
