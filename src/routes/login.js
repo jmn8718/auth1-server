@@ -1,6 +1,6 @@
 const express = require('express');
 const { passport } = require('../auth');
-const { findKey, get } = require('lodash');
+const { get } = require('lodash');
 const { logger } = require('../logger');
 const router = express.Router();
 const { store, manager } = require('../auth/flowstate');
@@ -25,8 +25,9 @@ router.get('/', checkLoggedIn, function(req, res, next) {
     req.session.messages = [];
   }
 
-  if (get(req, 'query.state') && get(req, 'session.state')) {
-    const loginState = { name: 'login', prev: req.query.state };
+  const state = get(req, 'query.state');
+  if (state && get(req, 'session.state')) {
+    const loginState = { name: 'login', prev: state };
     logger.debug(
       'Redirected to login from authorize => loginState: ' +
         JSON.stringify(loginState)
@@ -35,6 +36,7 @@ router.get('/', checkLoggedIn, function(req, res, next) {
       pageOptions.action = pageOptions.action + '?state=' + handle;
       pageOptions.githubHref = pageOptions.githubHref + '?state=' + handle;
       pageOptions.googleHref = pageOptions.googleHref + '?state=' + handle;
+      pageOptions.redirectTo = pageOptions.redirectTo + '?state=' + handle;
       res.render('authForm', pageOptions);
     });
   } else {
@@ -45,10 +47,18 @@ router.get('/', checkLoggedIn, function(req, res, next) {
 router.post(
   '/',
   manager.loadState('login'),
-  passport.authenticate('local', {
-    failureRedirect: '/login',
-    failureMessage: true,
-  }),
+  function(req, res, next) {
+    let failureRedirect = '/login';
+    const state = get(req, 'query.state');
+    const flowState = get(req, 'state', {});
+    if (state && state === flowState.handle) {
+      failureRedirect = failureRedirect + '?state=' + state;
+    }
+    return passport.authenticate('local', {
+      failureRedirect,
+      failureMessage: true,
+    })(req, res, next);
+  },
   function(req, res, next) {
     logger.debug('Successfully logged with username/password');
     next();

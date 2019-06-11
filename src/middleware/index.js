@@ -52,12 +52,12 @@ module.exports = {
     // });
 
     // redirect to '/' on 404
-    app.use(function(req, res, next) {
+    app.use(function(req, res) {
       res.redirect('/');
     });
 
     // error handler
-    app.use(function(err, req, res, next) {
+    app.use(function(err, req, res) {
       logger.error(err);
       // set locals, only providing error in development
       res.locals.message = err.message;
