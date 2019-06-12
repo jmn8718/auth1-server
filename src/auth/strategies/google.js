@@ -35,7 +35,7 @@ const parseProfile = function(profile) {
 
 function registerStrategy(passport) {
   logger.debug('Registering google strategy');
-  const callbackURL = `${SERVER_HOST}/social/google/callback`;
+  const callbackURL = `${SERVER_HOST}/oauth/google/callback`;
   logger.debug('github callbackURL: ' + callbackURL);
   passport.use(
     new GoogleStrategy(

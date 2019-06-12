@@ -31,7 +31,7 @@ const parseProfile = function(profile) {
 
 function registerStrategy(passport) {
   logger.debug('Registering github strategy');
-  const callbackURL = `${SERVER_HOST}/social/github/callback`;
+  const callbackURL = `${SERVER_HOST}/oauth/github/callback`;
   logger.debug('github callbackURL: ' + callbackURL);
   passport.use(
     new GitHubStrategy(

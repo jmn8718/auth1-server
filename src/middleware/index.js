@@ -56,7 +56,11 @@ module.exports = {
     app.use(function(req, res) {
       res.redirect('/');
     });
-    app.use(server.errorHandler());
+
+    if (NODE_ENV !== 'development') {
+      app.use(server.errorHandler());
+    }
+
     // error handler
     // app.use(function(err, req, res) {
     //   logger.error(err);

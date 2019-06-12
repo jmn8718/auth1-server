@@ -8,7 +8,7 @@ const { Grant } = require('../db/grant');
 const { logger } = require('../logger');
 
 router.get(
-  '/authorize',
+  '/',
   ensureLoggedIn('/login'),
   server.authorize(
     function(clientId, redirectUri, scope, type, done) {
@@ -46,7 +46,7 @@ router.get(
         JSON.stringify({ userId: user.userId, clientId: client.clientId })
     );
     res.render('consentForm', {
-      action: `/dialog/authorize/decision?transaction_id=${transactionID}`,
+      action: `/oauth/authorize/decision?transaction_id=${transactionID}`,
       client,
       title: 'Consent',
       buttonLabel: 'Accept',
@@ -57,7 +57,7 @@ router.get(
 );
 
 router.post(
-  '/authorize/decision',
+  '/decision',
   ensureLoggedIn('/login'),
   function deny(req, res, next) {
     if (req.body.cancel) {
@@ -66,7 +66,6 @@ router.post(
     next();
   },
   server.decision(function(req, done) {
-    console.log(done);
     const { user, oauth2 } = req;
     const { client } = oauth2;
     const grantData = { userId: user.userId, clientId: client.clientId };

@@ -16,8 +16,8 @@ router.get('/', checkLoggedIn, function(req, res, next) {
     action: '/register',
     redirectTo: '/login',
     redirectToMessage: 'Go to Login',
-    githubHref: '/social/github',
-    googleHref: '/social/google',
+    githubHref: '/oauth/github',
+    googleHref: '/oauth/google',
   };
   const errorMessages = req.flash('error-register');
   if (errorMessages.length > 0) {

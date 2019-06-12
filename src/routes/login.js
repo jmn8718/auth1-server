@@ -20,8 +20,8 @@ router.get('/', manager.loadState('login'), checkLoggedIn, function(
     action: '/login',
     redirectTo: '/register',
     redirectToMessage: 'Go to register',
-    githubHref: '/social/github',
-    googleHref: '/social/google',
+    githubHref: '/oauth/github',
+    googleHref: '/oauth/google',
   };
   const errorMessages = req.session.messages;
   if (errorMessages && errorMessages.length > 0) {

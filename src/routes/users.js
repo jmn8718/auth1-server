@@ -17,7 +17,7 @@ router.get('/', ensureLoggedIn('/login'), function(req, res, next) {
     userString: JSON.stringify(req.user),
     user: req.user,
     sessionString: JSON.stringify(req.session),
-    consentUrl: `/dialog/authorize?${qs.stringify(authorizeQs)}`,
+    consentUrl: `/oauth/authorize?${qs.stringify(authorizeQs)}`,
   };
 
   res.render('users', pageOptions);
