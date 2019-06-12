@@ -69,7 +69,9 @@ router.get(
     limit: 5,
   }),
   function(req, res, next) {
-    logger.debug('Redirected to /authorize => ' + req.session.state);
+    logger.debug(
+      'Redirected to /authorize => ' + JSON.stringify(req.session.state)
+    );
     const {
       client_id,
       response_type,

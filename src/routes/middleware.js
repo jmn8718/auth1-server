@@ -5,6 +5,11 @@ const { manager } = require('../auth/flowstate');
 
 module.exports.checkLoggedIn = function(req, res, next) {
   if (req.isAuthenticated()) {
+    const state = get(req, 'session.state');
+    // if we have states from flowstate, we will complete them
+    if (state) {
+      return manager.complete('login')(req, res, next);
+    }
     return res.redirect('/users');
   }
   next();

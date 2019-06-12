@@ -9,7 +9,11 @@ const {
   checkLoggedIn,
 } = require('./middleware');
 
-router.get('/', checkLoggedIn, function(req, res, next) {
+router.get('/', manager.loadState('login'), checkLoggedIn, function(
+  req,
+  res,
+  next
+) {
   const pageOptions = {
     title: 'LOGIN',
     buttonLabel: 'Sign in',
