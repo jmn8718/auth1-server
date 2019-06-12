@@ -1,4 +1,5 @@
 const express = require('express');
+const { indexOf } = require('lodash');
 const { logger } = require('../logger');
 const router = express.Router();
 const { store } = require('../auth/flowstate');
@@ -43,7 +44,7 @@ async function validateClient(req, res, next) {
 
       if (!client) {
         message = 'Invalid client_id';
-      } else if (client.redirectUri !== redirect_uri) {
+      } else if (indexOf(client.redirectUri, redirect_uri) === -1) {
         message = 'Invalid redirect_uri';
       }
     } catch (err) {

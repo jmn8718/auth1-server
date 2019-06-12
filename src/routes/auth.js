@@ -1,4 +1,5 @@
 const express = require('express');
+const { indexOf } = require('lodash');
 const router = express.Router();
 const { ensureLoggedIn } = require('connect-ensure-login');
 const { server } = require('../auth/server');
@@ -13,7 +14,7 @@ router.get(
     function(clientId, redirectUri, scope, type, done) {
       logger.debug('authorize ---> ' + clientId + ' . ' + redirectUri);
       logger.debug('scope ---> ' + scope + ' . ' + type);
-      Client.findOne({ clientId }, function(err, client) {
+      Client.findOne({ clientId }, { __v: false }, function(err, client) {
         if (err) {
           return done(err);
         }
@@ -21,10 +22,10 @@ router.get(
         if (!client) {
           return done(null, false);
         }
-        if (client.redirectUri !== redirectUri) {
+        if (indexOf(client.redirectUri, redirectUri) === -1) {
           return done(null, false);
         }
-        return done(null, client, client.redirectUri);
+        return done(null, client, redirectUri);
       });
     },
     function(tx, done) {
@@ -57,7 +58,10 @@ router.post(
   '/authorize/decision',
   ensureLoggedIn('/login'),
   server.decision(function(req, done) {
-    const { user, oauth2 } = req;
+    const { user, oauth2, body } = req;
+    if (body.cancel) {
+      return done(new Error('consent denied'));
+    }
     const { client } = oauth2;
     const grantData = { userId: user.userId, clientId: client.clientId };
     Grant.findOneAndUpdate(
