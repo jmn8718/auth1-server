@@ -50,6 +50,8 @@ router.get(
       client,
       title: 'Consent',
       buttonLabel: 'Accept',
+      isAuthenticated: true,
+      user: req.user,
     });
   }
 );

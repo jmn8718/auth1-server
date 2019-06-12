@@ -7,11 +7,11 @@ html
 	body
 		div.d-flex.flex-column.flex-md-row.align-items-center.p-3.px-md-4.mb-3.bg-white.border-bottom.shadow-sm
 			h5.my-0.mr-md-auto.font-weight-normal.text-uppercase auth1-server
-			if !isAuthenticated
+			if isAuthenticated
+				a.btn.btn-outline-primary.text-uppercase(href='/logout') logout
+			else
 				a.btn.btn-outline-primary.text-uppercase.mr-4(href='/login') login
 				a.btn.btn-outline-primary.text-uppercase(href='/register') register
-			else
-				a.btn.btn-outline-primary.text-uppercase(href='/logout') logout
 		div.container
 			block content
 		script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js')
