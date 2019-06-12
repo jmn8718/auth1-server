@@ -5,10 +5,11 @@ const router = express.Router();
 
 router.get('/', ensureLoggedIn('/login'), function(req, res, next) {
   const authorizeQs = {
-    response_type: 'code',
+    response_type: 'code token',
     client_id: 'id2019',
     scope: 'openid email',
     redirect_uri: 'http://localhost:8080/users/consent',
+    nonce: Date.now(),
   };
   const pageOptions = {
     title: 'Users',

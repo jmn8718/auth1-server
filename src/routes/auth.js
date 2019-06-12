@@ -59,11 +59,15 @@ router.get(
 router.post(
   '/authorize/decision',
   ensureLoggedIn('/login'),
-  server.decision(function(req, done) {
-    const { user, oauth2, body } = req;
-    if (body.cancel) {
-      return done(new Error('consent denied'));
+  function deny(req, res, next) {
+    if (req.body.cancel) {
+      next(new Error('consent denied'));
     }
+    next();
+  },
+  server.decision(function(req, done) {
+    console.log(done);
+    const { user, oauth2 } = req;
     const { client } = oauth2;
     const grantData = { userId: user.userId, clientId: client.clientId };
     Grant.findOneAndUpdate(
