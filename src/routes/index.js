@@ -1,3 +1,4 @@
+const passport = require('passport');
 const { logger } = require('../logger');
 const usersRouter = require('./users');
 const registerRouter = require('./register');
@@ -6,6 +7,7 @@ const logoutRouter = require('./logout');
 const userinfoRouter = require('./userinfo');
 const authorizeRouter = require('./authorize');
 const oauthRouter = require('./oauth');
+const apiRouter = require('./api');
 const { ensureAuthenticated } = require('./middleware');
 
 function applyRoutes(app) {
@@ -30,6 +32,14 @@ function applyRoutes(app) {
   app.use('/userinfo', userinfoRouter);
 
   app.use('/users', ensureAuthenticated, usersRouter);
+
+  app.use(
+    '/api',
+    passport.authenticate(['bearer'], {
+      session: false,
+    }),
+    apiRouter
+  );
 }
 
 module.exports = {
