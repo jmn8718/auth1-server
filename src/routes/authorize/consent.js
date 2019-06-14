@@ -25,7 +25,7 @@ function denyConsent(req, res, next) {
   next();
 }
 
-async function grantConsent(req, res, next) {
+async function grantConsent(req, next) {
   try {
     const user = get(req, 'user', {});
     const client = get(req, 'oauth2.client', {});

@@ -2,13 +2,14 @@ const express = require('express');
 const { middleware } = require('flowstate');
 const { ensureLoggedIn } = require('connect-ensure-login');
 const { logger } = require('../../logger');
-const { store } = require('../../auth/flowstate');
+const { store, manager } = require('../../auth/flowstate');
 const { server } = require('../../auth/server');
 const router = express.Router();
 
 const { validateClient, validateParams } = require('./validations');
 const { validateResponse } = require('./validateResponse');
 const { immediateResponse } = require('./inmediateResponse');
+const { completeResponse } = require('./completeResponse');
 const { renderConsentForm, denyConsent, grantConsent } = require('./consent');
 
 const { useAuthorizeFlowstate } = require('./flow');
@@ -29,7 +30,7 @@ router.get(
 
     return useAuthorizeFlowstate(req, res, next);
   },
-  server.authorize(validateResponse, immediateResponse),
+  server.authorize(validateResponse, immediateResponse, completeResponse),
   renderConsentForm
 );
 
@@ -37,7 +38,6 @@ router.post(
   '/',
   ensureLoggedIn('/login'),
   denyConsent,
-  grantConsent,
-  server.decision()
+  server.decision(grantConsent)
 );
 module.exports = router;
