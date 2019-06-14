@@ -27,6 +27,7 @@ The server will listen on the port 8080
 - [passport-http](https://github.com/jaredhanson/passport-http)
 - [oauth2orize](https://github.com/jaredhanson/oauth2orize)
 - [oauth2orize-openid](https://github.com/jaredhanson/oauth2orize-openid)
+- [oauth2orize-audience](https://github.com/jaredhanson/oauth2orize-audience)
 
 ## Links
 - [https://auth0.com/docs/flows/guides/implicit/call-api-implicit#authorize-the-user]

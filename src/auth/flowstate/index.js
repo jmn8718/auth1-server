@@ -13,7 +13,7 @@ manager.use(
     function(req, res, next) {
       logger.debug(
         'Executing authorize resume middleware chain => ' +
-          JSON.stringify(req.session.state)
+          JSON.stringify(req.session)
       );
       next();
     },

@@ -1,4 +1,5 @@
 const { createServer } = require('oauth2orize');
+const { extensions } = require('oauth2orize-audience');
 const { Client } = require('../../db/client');
 const { logger } = require('../../logger');
 const server = createServer();
@@ -23,6 +24,9 @@ server.deserializeClient(function(id, done) {
 // https://auth0.com/docs/flows
 registerCodeFlow(server);
 registerImplicitFlow(server);
+
+logger.debug('Adding oauth2orize audience extension');
+server.grant(extensions());
 
 module.exports = {
   server,

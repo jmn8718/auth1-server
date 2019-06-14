@@ -6,7 +6,7 @@ const VALID_RESPONSE_TYPES = ['code', 'id_token', 'token'];
 function validateParams(req, res, next) {
   let message;
 
-  const { client_id, redirect_uri, state, response_type } = req.query;
+  const { client_id, redirect_uri, state, response_type, audience } = req.query;
 
   if (!client_id) {
     message = `'Missing client_id`;
@@ -16,6 +16,8 @@ function validateParams(req, res, next) {
     message = 'Missing state';
   } else if (!response_type) {
     message = 'Missing response_type';
+  } else if (!audience) {
+    message = 'Missing audience';
   }
 
   if (message) {

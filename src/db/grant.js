@@ -10,6 +10,16 @@ const GrantSchema = new Schema({
     type: String,
     required: true,
   },
+  scope: [
+    {
+      type: String,
+      default: [],
+    },
+  ],
+  audience: {
+    type: String,
+    default: '',
+  },
 });
 
 const Grant = mongoose.model('Grant', GrantSchema);
