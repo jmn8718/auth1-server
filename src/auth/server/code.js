@@ -29,14 +29,6 @@ function registerCodeFlow(server) {
       } catch (err) {
         done(err);
       }
-
-      authorizationCode.save(function(err) {
-        if (err) {
-          return done(err);
-        }
-        logger.debug(`AC (${code}) => ${JSON.stringify(authorizationCode)}`);
-        return done(null, code);
-      });
     })
   );
 

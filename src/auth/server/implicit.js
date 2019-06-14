@@ -2,6 +2,7 @@ const oauth2orize = require('oauth2orize');
 const openid = require('oauth2orize-openid');
 const { AccessToken } = require('../../db/accessToken');
 const uid = require('node-uid');
+const { get } = require('lodash');
 const { logger } = require('../../logger');
 const { generateClaimsAndSign } = require('../token');
 
@@ -29,11 +30,12 @@ function handleToken(client, user, ares, areq, done) {
   const token = generateClaimsAndSign({
     user_id: user.userId,
   });
+  const scope = get(areq, 'scope', []);
   const accessToken = new AccessToken({
     token,
     userId: user.userId,
     clientId: client.clientId,
-    scope: areq.scope.join(' '),
+    scope: scope.join(' '),
   });
   accessToken.save(function(err) {
     if (err) {
