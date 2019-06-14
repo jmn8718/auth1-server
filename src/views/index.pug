@@ -3,4 +3,5 @@ extends pageLayout
 block content
   h1= title
   p Welcome to #{title}
-  a.btn.btn-outline-primary.text-uppercase.mr-4(href='/authorize?client_id=auth19id&redirect_uri=http://localhost:8080/users/consent&state=x&response_type=code%20token%20id_token&nonce=01&scope=email%20openid') auth
+  if isDevelopment
+    a.btn.btn-outline-primary.text-uppercase.mr-4(href='/authorize?client_id=auth19id&redirect_uri=http://localhost:8080/users/consent&state=x&response_type=code%20token%20id_token&nonce=01&scope=email%20openid') auth

@@ -9,6 +9,7 @@ const authorizeRouter = require('./authorize');
 const oauthRouter = require('./oauth');
 const apiRouter = require('./api');
 const { ensureAuthenticated } = require('./middleware');
+const { NODE_ENV } = require('../env');
 
 function applyRoutes(app) {
   logger.debug('Applying routes');
@@ -17,6 +18,7 @@ function applyRoutes(app) {
     const pageOptions = {
       title: 'AUTH1-SERVER',
       isAuthenticated: req.isAuthenticated(),
+      isDevelopment: NODE_ENV === 'development',
     };
     res.render('index', pageOptions);
   });

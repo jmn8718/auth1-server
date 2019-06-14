@@ -4,6 +4,10 @@ const { extend } = require('lodash');
 const env = extend({}, process.env);
 
 const schema = {
+  NODE_ENV: {
+    type: 'string',
+    default: 'development',
+  },
   SERVER_HOST: {
     type: 'string',
     default: 'http://localhost:8080',
