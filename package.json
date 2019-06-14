@@ -1,12 +1,32 @@
 {
   "name": "auth1-server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "pretty": "prettier --write src/**/*.js",
     "start:dev": "nodemon src/index.js --watch ./src",
     "start": "node ./src/bin/www"
   },
+  "license": "ISC",
+  "author": {
+    "name": "Jose Miguel Navarro",
+    "email": "jmn8718@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jmn8718/auth1-server.git"
+  },
+  "homepage": "https://github.com/jmn8718/auth1-server",
+  "keywords": [
+    "passport",
+    "oauth",
+    "openid",
+    "google",
+    "github",
+    "node",
+    "javascript",
+    "docker"
+  ],
   "dependencies": {
     "bcrypt": "^3.0.6",
     "connect-ensure-login": "^0.1.1",
