@@ -1,12 +1,12 @@
 const express = require('express');
-const { passport } = require('../auth');
+const { passport } = require('../../auth');
 const router = express.Router();
-const { logger } = require('../logger');
-const { manager } = require('../auth/flowstate');
+const { logger } = require('../../logger');
+const { manager } = require('../../auth/flowstate');
 const {
   redirectCompleteWithFlowState,
   handlePassportWithState,
-} = require('./middleware');
+} = require('../middleware');
 
 router.get(
   '/github',

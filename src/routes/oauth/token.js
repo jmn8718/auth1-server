@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { passport } = require('../auth');
-const { server } = require('../auth/server');
+const { passport } = require('../../auth');
+const { server } = require('../../auth/server');
 
 router.post(
   '/',

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { Client } = require('../db/client');
+const { Client } = require('../../db/client');
 const { get, omit, pick } = require('lodash');
 
-router.get('/clients', async function(req, res, next) {
+router.get('/', async function(req, res, next) {
   try {
     const { userId } = get(req, 'user', {});
     const clients = await Client.find(
@@ -16,7 +16,7 @@ router.get('/clients', async function(req, res, next) {
   }
 });
 
-router.post('/clients', async function(req, res, next) {
+router.post('/', async function(req, res, next) {
   try {
     const clientBody = pick(req.body, ['name', 'description', 'redirect_uri']);
     clientBody.userId = get(req, 'user.userId', '');
@@ -29,7 +29,7 @@ router.post('/clients', async function(req, res, next) {
   }
 });
 
-router.patch('/clients/:clientId', async function(req, res, next) {
+router.patch('/:clientId', async function(req, res, next) {
   try {
     const { clientId } = req.params;
     const { userId = '' } = get(req, 'user', {});
@@ -54,7 +54,7 @@ router.patch('/clients/:clientId', async function(req, res, next) {
   }
 });
 
-router.delete('/clients/:clientId', async function(req, res, next) {
+router.delete('/:clientId', async function(req, res, next) {
   try {
     const { clientId } = req.params;
     const { userId = '' } = get(req, 'user', {});
