@@ -64,6 +64,7 @@ All the services required (server and db) will start. It can be configured on th
 - [ ] deploy on heroku
 - [ ] add tenants to separate clients
 - [ ] set default audience when not passed
+- [ ] use audience on code exchange
 - [ ] proper error response
 - [ ] separate clients with tenant concept
 - [ ] set grants on ?clients? to show in consent form

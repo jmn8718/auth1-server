@@ -1,6 +1,6 @@
-const { indexOf, filter } = require('lodash');
+const { indexOf, filter, get } = require('lodash');
 const { Client } = require('../../db/client');
-
+const { invalidScopes } = require('../../auth/utils');
 const VALID_RESPONSE_TYPES = ['code', 'id_token', 'token'];
 
 function validateParams(req, res, next) {
@@ -62,8 +62,20 @@ async function validateClient(req, res, next) {
   return next();
 }
 
+function validateScopes(req, res, next) {
+  // TODO validate scopes with audience scopes
+  const audienceScopes = [];
+  const scope = get(req, 'query.scope', '').split(' ');
+  const invalidRequestScopes = invalidScopes(scope, audienceScopes);
+  if (invalidRequestScopes.length > 0) {
+    next(new Error(`Invalid scopes: ${invalidRequestScopes.join(', ')}`));
+  }
+  next();
+}
+
 module.exports = {
   validateClient,
   validateParams,
+  validateScopes,
   VALID_RESPONSE_TYPES,
 };

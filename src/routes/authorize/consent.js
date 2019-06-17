@@ -4,31 +4,55 @@ const { get } = require('lodash');
 
 function renderConsentForm(req, res) {
   const { transactionID, client, user, locals } = req.oauth2;
-  const scopesToGrant = get(locals, 'scopesToGrant', []);
-  const audience = get(locals, 'audience', '');
+  const scope = get(req, 'oauth2.req.scope', []);
+  const audience = get(req, 'oauth2.req.audience', '');
   logger.debug(
     'consent +=> ' +
       JSON.stringify({
         userId: user.userId,
         clientId: client.clientId,
-        scope: scopesToGrant,
+        scope,
         audience,
       })
   );
-  res.render('consentForm', {
+  // TODO get scopes and descriptions to render proper screen
+  const form = {
     action: `/authorize?transaction_id=${transactionID}`,
     client,
     title: 'Consent',
     buttonLabel: 'Accept',
-    isAuthenticated: true,
     user: req.user,
-  });
+    name: user.name || user.username,
+    scopes: scope.map(function(name) {
+      return { value: name, description: name };
+    }),
+  };
+
+  res.render('consentForm', form);
+}
+
+function prepare(req, res, next) {
+  const session = req.session;
+  const scope = get(req, 'body.scope', []);
+
+  if (!Array.isArray(scope)) {
+    next(new Error('Scope must be an array'));
+  }
+  session.consentInfo = {
+    allow: !req.body.cancel,
+    scope: req.body.scope || [],
+    audience: req.body.audience || '',
+  };
+  next();
 }
 
 function denyConsent(req, res, next) {
   // TODO logout as the user did not consent
-  if (req.body.cancel) {
-    next(new Error('consent denied'));
+  const allow = get(req, 'session.consentInfo.allow', false);
+  if (!allow) {
+    logger.debug('Consent not accepted, login out the user');
+    // next(new Error('consent denied'));
+    return res.redirect('/logout');
   }
   next();
 }
@@ -37,8 +61,8 @@ async function grantConsent(req, next) {
   try {
     const user = get(req, 'user', {});
     const client = get(req, 'oauth2.client', {});
-    const audience = get(req, 'oauth2.info.audience', '');
-    const scope = get(req, 'oauth2.info.scopesToGrant', []);
+    const audience = get(req, 'oauth2.req.audience', '');
+    const scope = get(req, 'oauth2.req.scopesToGrant', []);
     const grantData = {
       userId: user.userId,
       clientId: client.clientId,
@@ -49,7 +73,7 @@ async function grantConsent(req, next) {
     );
     const grant = await Grant.findOneAndUpdate(
       grantData,
-      { ...grantData, $push: { scope: { $each: scope } } },
+      { ...grantData, scope },
       {
         upsert: true,
         new: true,
@@ -65,6 +89,7 @@ async function grantConsent(req, next) {
 
 module.exports = {
   renderConsentForm,
+  prepare,
   denyConsent,
   grantConsent,
 };

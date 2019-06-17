@@ -3,8 +3,14 @@ extends formLayout
 block form
 	h5.card-title.text-center #{client.name}
 	form.form-signin(action= action method='post')
-		input.btn.btn-lg.btn-primary.btn-block.text-uppercase(type='submit' value='Allow')
-		input.btn.btn-lg.btn-primary.btn-block.text-uppercase(type='submit' value='Deny' name="cancel")
+		div
+			each scope in scopes
+				input(value= scope.value, name='scope[]', type='hidden')
+		ul
+			each scope in scopes
+				li= scope.description
+		button.btn.btn-lg.btn-primary.btn-block.text-uppercase(type='submit' value='Allow' id='allow' ) Allow
+		button.btn.btn-lg.btn-primary.btn-block.text-uppercase(type='submit' value='Deny' id='deny' name='cancel') Cancel
 	if error
 		hr
 		div.alert.alert-danger #{error}

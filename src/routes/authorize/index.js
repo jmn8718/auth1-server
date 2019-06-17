@@ -6,17 +6,27 @@ const { store, manager } = require('../../auth/flowstate');
 const { server } = require('../../auth/server');
 const router = express.Router();
 
-const { validateClient, validateParams } = require('./validations');
+const {
+  validateClient,
+  validateParams,
+  validateScopes,
+} = require('./validations');
 const { validateResponse } = require('./validateResponse');
 const { immediateResponse } = require('./inmediateResponse');
 const { completeResponse } = require('./completeResponse');
-const { renderConsentForm, denyConsent, grantConsent } = require('./consent');
+const {
+  renderConsentForm,
+  denyConsent,
+  grantConsent,
+  prepare,
+} = require('./consent');
 
 const { useAuthorizeFlowstate } = require('./flow');
 // https://auth0.com/docs/protocols/oauth2#authorization-endpoint
 router.get(
   '/',
   validateParams,
+  validateScopes,
   validateClient,
   middleware.clean(store, {
     ttl: 259200000, // 3 days
@@ -37,6 +47,7 @@ router.get(
 router.post(
   '/',
   ensureLoggedIn('/login'),
+  prepare,
   denyConsent,
   server.decision(grantConsent)
 );

@@ -10,6 +10,7 @@ function handleIdToken(client, user, ares, areq, done) {
   logger.debug('id client => ' + JSON.stringify(client));
   logger.debug('id user => ' + JSON.stringify(user));
   logger.debug('id areq => ' + JSON.stringify(areq));
+  // TODO generate proper idtoken
   const idToken = uid(128);
   done(null, idToken);
 }
@@ -69,6 +70,32 @@ function registerImplicitFlow(server) {
 
   // Grant implicit authorization
   server.grant(oauth2orize.grant.token(handleToken));
+
+  // TODO
+  // Exchange user id and password for access tokens.
+  server.exchange(
+    oauth2orize.exchange.password(function(
+      client,
+      username,
+      password,
+      scope,
+      done
+    ) {
+      console.log('done', done);
+      logger.debug('o2 exchange password -> client' + JSON.stringify(client));
+      logger.debug('o2 exchange password -> scope' + JSON.stringify(scope));
+      logger.debug(
+        'o2 exchange password -> username / password' +
+          username +
+          ' / ' +
+          password
+      );
+
+      const token = uid(128);
+
+      done(null, token);
+    })
+  );
 }
 
 module.exports = {
