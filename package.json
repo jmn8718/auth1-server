@@ -53,7 +53,7 @@
     "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0",
     "passport-oauth2-client-password": "^0.1.2",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "qs": "^6.7.0",
     "winston": "^3.2.1",
     "xenv": "^4.4.1"
